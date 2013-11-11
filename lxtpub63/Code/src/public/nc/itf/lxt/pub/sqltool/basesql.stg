@@ -1,0 +1,11 @@
+sql(fields, tables, joins, wheres, orderbys, groups) ::= "select <fields:{f | <f.table><if(f.table)>.<endif><f.field> <f.key>}; separator=\", \">
+ from <tables:{t | <t.name> <t.key>}; separator=\", \">
+ where 1=1
+ <if(joins)>and (<endif>
+ <joins:{j | <j.joinTable>.<j.joinField> = <j.mainTable>.<j.mainField>}; separator=\" and \">
+ <if(joins)>)<endif>
+ <wheres:{w | <w.logicOP> <if(w.leftBracket)>(<endif> <w.leftTable>.<w.leftField> <w.compareOP> <w.rightTable><if(w.rightTable)>.<endif><w.rightField> <if(w.rightBracket)>)<endif>}>
+ <if(orderbys)> order by <endif>
+ <orderbys:{o | <o.table>.<o.field> <o.order>}; separator=\", \">
+ <if(groups)> group by <endif>
+ <groups:{g | <g.table>.<g.field>}; separator=\", \">"
