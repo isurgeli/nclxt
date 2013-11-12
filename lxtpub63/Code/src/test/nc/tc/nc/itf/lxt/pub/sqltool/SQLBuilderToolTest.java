@@ -3,6 +3,7 @@ package nc.tc.nc.itf.lxt.pub.sqltool;
 import java.util.Hashtable;
 
 import nc.itf.lxt.pub.sqltool.SQLBuilderTool;
+import nc.vo.pub.BusinessException;
 import junit.framework.TestCase;
 
 public class SQLBuilderToolTest extends TestCase {
@@ -10,7 +11,7 @@ public class SQLBuilderToolTest extends TestCase {
 		super(name);
 	}
 	
-	public void testST(){
+	public void testST() throws BusinessException{
 		SQLBuilderTool tool = new SQLBuilderTool(new SQLDefine());
 		Hashtable<String, Object> paras  = new Hashtable<String, Object>();
 		paras.put("BUSITYPE", "'上收下级单位款'");

@@ -2,6 +2,8 @@ package nc.itf.lxt.pub.sqltool;
 
 import java.util.Hashtable;
 
+import nc.vo.pub.BusinessException;
+
 public class SQLWhereClause {
 	private OPERATOR logicOP;
 	private BRACKET bracket;
@@ -27,11 +29,15 @@ public class SQLWhereClause {
 		return bracket.getValue().equals("(");
 	}
 
-	public String getLeftTable() {
+	public String getLeftTable() throws BusinessException {
+		if (sqlFields.get(leftKey) == null)
+			throw new BusinessException("["+leftKey+"]没有定义。");
 		return sqlFields.get(leftKey).getTable();
 	}
 	
-	public String getLeftField() {
+	public String getLeftField() throws BusinessException {
+		if (sqlFields.get(leftKey) == null)
+			throw new BusinessException("["+leftKey+"]没有定义。");
 		return sqlFields.get(leftKey).getField();
 	}
 

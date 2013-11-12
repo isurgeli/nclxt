@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 
+import nc.vo.pub.BusinessException;
+
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupString;
@@ -49,7 +51,7 @@ public class SQLBuilderTool {
 		
 	}
 	
-	public String buildSQL(String[] keys, SQLWhereClause[] flexWheres, Hashtable<String, Object> paras) {
+	public String buildSQL(String[] keys, SQLWhereClause[] flexWheres, Hashtable<String, Object> paras) throws BusinessException {
 		ArrayList<SQLField> fields = new ArrayList<SQLField>();
 		ArrayList<SQLTable> tables = new ArrayList<SQLTable>();
 		ArrayList<SQLJoinClause> joins = new ArrayList<SQLJoinClause>();
@@ -76,7 +78,7 @@ public class SQLBuilderTool {
 		baseSt.add("orderbys", orders);
 		String sqlBase = baseSt.render();
 		
-		ST st = new ST(sqlBase, '$', '$');
+		ST st = new ST(sqlBase, DELIMITER.START.getValue(), DELIMITER.END.getValue());
 		for (String para : paras.keySet())
 			st.add(para, paras.get(para));
 		
@@ -86,12 +88,15 @@ public class SQLBuilderTool {
 	private void prepareTemplatePara(String[] keys,
 			SQLWhereClause[] flexWheres, ArrayList<SQLField> fields,
 			ArrayList<SQLTable> tables, ArrayList<SQLJoinClause> joins, 
-			ArrayList<SQLOrderbyClause> orders,	ArrayList<SQLWhereClause> wheres) {
+			ArrayList<SQLOrderbyClause> orders,	ArrayList<SQLWhereClause> wheres) throws BusinessException {
 		for(SQLWhereClause sqlWhere : wheres)
 			sqlWhere.setSqlFields(sqlFields);
 		
 		Hashtable<String, String> joinTables = new Hashtable<String, String>();
 		for (String key : keys) {
+			if (sqlFields.get(key) == null)
+				throw new BusinessException("["+key+"]定义不存在。");
+			
 			fields.add(sqlFields.get(key));
 			if (sqlFields.get(key).getTable() != null && !joinTables.containsKey(sqlFields.get(key).getTable()))
 				joinTables.put(sqlFields.get(key).getTable(), sqlFields.get(key).getTable());
@@ -107,10 +112,11 @@ public class SQLBuilderTool {
 		
 		if (flexWheres != null) {
 			for (SQLWhereClause where : flexWheres) {
+				where.setSqlFields(sqlFields);
 				wheres.add(where);
 				if (!joinTables.containsKey(where.getLeftTable()))
 					joinTables.put(where.getLeftTable(), where.getLeftTable());
-				if (!joinTables.containsKey(where.getRightTable()))
+				if (where.getRightTable() != null && !joinTables.containsKey(where.getRightTable()))
 					joinTables.put(where.getRightTable(), where.getRightTable());
 			}
 		}
@@ -126,7 +132,7 @@ public class SQLBuilderTool {
 	}
 
 	private void addSortAllNeedTables(ArrayList<SQLTable> tables,
-			ArrayList<SQLJoinClause> joins, Hashtable<String, String> joinTables) {
+			ArrayList<SQLJoinClause> joins, Hashtable<String, String> joinTables) throws BusinessException {
 		ArrayList<String> joinTableList = new ArrayList<String>();
 		for (String joinTable : joinTables.keySet()) {
 			joinTableList.add(joinTable);
@@ -147,12 +153,15 @@ public class SQLBuilderTool {
 		}
 	}
 	
-	private void addParentTables(Hashtable<String, String> joinTables, String joinTable) {
+	private void addParentTables(Hashtable<String, String> joinTables, String joinTable) throws BusinessException {
 		if (!joinTables.containsKey(joinTable))
 			joinTables.put(joinTable, joinTable);
 		
 		if (joinTable.equals(mainTable)) 
 			return;
+		
+		if (sqlJoins.get(joinTable) == null)
+			throw new BusinessException("["+joinTable+"]定义不存在。");
 		
 		String parent = sqlJoins.get(joinTable).getMainTable();
 		addParentTables(joinTables, parent);

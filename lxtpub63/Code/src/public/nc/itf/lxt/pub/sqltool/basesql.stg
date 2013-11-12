@@ -1,4 +1,4 @@
-sql(fields, tables, joins, wheres, orderbys, groups) ::= "select <fields:{f | <f.table><if(f.table)>.<endif><f.field> <f.key>}; separator=\", \">
+sql(fields, tables, joins, wheres, orderbys, groups) ::= "select <fields:{f | <if(f.needTable)><f.table>.<endif><f.field> <f.key>}; separator=\", \">
  from <tables:{t | <t.name> <t.key>}; separator=\", \">
  where 1=1
  <if(joins)>and (<endif>
