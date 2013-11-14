@@ -1,8 +1,5 @@
 package nc.itf.lxt.pub.sqltool;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -11,7 +8,7 @@ import nc.vo.pub.BusinessException;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupString;
+import org.stringtemplate.v4.STGroupFile;
 
 public class SQLBuilderTool {
 	private Hashtable<String, SQLField> sqlFields;
@@ -60,29 +57,24 @@ public class SQLBuilderTool {
 		
 		prepareTemplatePara(keys, flexWheres, fields, tables, joins, orders, wheres);
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(SQLBuilderTool.class.getResourceAsStream("basesql.stg")));
-		StringBuilder sb = new StringBuilder();
-		String line;
-		try {
-			while ((line = br.readLine()) != null) {
-				sb.append(line);
-			}
-		} catch (IOException e) {
-		}
-		STGroup group = new STGroupString(sb.toString());
+		STGroup group = new STGroupFile(SQLBuilderTool.class.getResource("basesql.stg").getPath());
 		ST baseSt = group.getInstanceOf("sql");
 		baseSt.add("fields", fields);
 		baseSt.add("tables", tables);
 		baseSt.add("joins", joins);
 		baseSt.add("wheres", wheres);
 		baseSt.add("orderbys", orders);
-		String sqlBase = baseSt.render();
+		String sql = baseSt.render();
 		
-		ST st = new ST(sqlBase, DELIMITER.START.getValue(), DELIMITER.END.getValue());
-		for (String para : paras.keySet())
-			st.add(para, paras.get(para));
+		if (paras != null) {
+			ST st = new ST(sql, DELIMITER.START.getValue(), DELIMITER.END.getValue());
+			for (String para : paras.keySet())
+				st.add(para, paras.get(para));
+			
+			sql = st.render();
+		}
 		
-		return st.render();
+		return sql;
 	}
 
 	private void prepareTemplatePara(String[] keys,
