@@ -1,37 +1,46 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="MyTask" basedir="." default="use">
-	<taskdef name="exportsqldata" classname="org.apache.tools.ant.lxt.pub.ExportSqlData" classpath=""/>
+	<taskdef name="exportsql4data" classname="org.apache.tools.ant.lxt.pub.ExportSql4Data" classpath=""/>
+	<taskdef name="exportsql4table" classname="org.apache.tools.ant.lxt.pub.ExportSql4Table" classpath=""/>
 
     <target name="insert">
-        <exportsqldata driver="oracle.jdbc.driver.OracleDriver" url="jdbc:oracle:thin:@127.0.0.1:1521:orcl" 
+        <exportsql4data driver="oracle.jdbc.driver.OracleDriver" url="jdbc:oracle:thin:@127.0.0.1:1521:orcl" 
         	user="cgxt1113" password="1" output="c:\aa.sql" mode="insert">
         	<!--
         	<sql>select * from pub_query_templet where pub_query_templet.node_code in ('C0020413','C0020422')</sql>
         	<sql>select pub_query_condition.* from pub_query_condition, pub_query_templet where pub_query_templet.id=pub_query_condition.pk_templet and pub_query_templet.node_code in ('C0020413','C0020422')</sql>
         	-->
         	<fileset file="c:/a.sql" erroronmissingdir="false"/>
-        </exportsqldata>
+        </exportsql4data>
     </target>
     
     <target name="del_insert">
-        <exportsqldata driver="oracle.jdbc.driver.OracleDriver" url="jdbc:oracle:thin:@127.0.0.1:1521:orcl" 
+        <exportsql4data driver="oracle.jdbc.driver.OracleDriver" url="jdbc:oracle:thin:@127.0.0.1:1521:orcl" 
         	user="cgxt1113" password="1" output="c:\aa.sql" mode="del_insert">
         	<!--
         	<sql>select * from pub_query_templet where pub_query_templet.node_code in ('C0020413','C0020422')</sql>
         	<sql>select pub_query_condition.* from pub_query_condition, pub_query_templet where pub_query_templet.id=pub_query_condition.pk_templet and pub_query_templet.node_code in ('C0020413','C0020422')</sql>
         	-->
         	<fileset file="c:/a.sql" erroronmissingdir="false"/>
-        </exportsqldata>
+        </exportsql4data>
     </target>
     
     <target name="update">
-        <exportsqldata driver="oracle.jdbc.driver.OracleDriver" url="jdbc:oracle:thin:@127.0.0.1:1521:orcl" 
+        <exportsql4data driver="oracle.jdbc.driver.OracleDriver" url="jdbc:oracle:thin:@127.0.0.1:1521:orcl" 
         	user="cgxt1113" password="1" output="c:\aa.sql" mode="update">
         	<!--
         	<sql>select * from pub_query_templet where pub_query_templet.node_code in ('C0020413','C0020422')</sql>
         	<sql>select pub_query_condition.* from pub_query_condition, pub_query_templet where pub_query_templet.id=pub_query_condition.pk_templet and pub_query_templet.node_code in ('C0020413','C0020422')</sql>
         	-->
         	<fileset file="c:/a.sql" erroronmissingdir="false"/>
-        </exportsqldata>
+        </exportsql4data>
+    </target>
+    
+    <target name="table">
+        <exportsql4table driver="oracle.jdbc.driver.OracleDriver" url="jdbc:oracle:thin:@127.0.0.1:1521:orcl" 
+        	user="cgxt1113" password="1" output="c:\aa.sql">
+        	<table>EOM_MEAS_ITEMS</table>
+        	<table>GZCG_QCRP_\w+_V</table>
+        </exportsql4table>
     </target>
 </project>

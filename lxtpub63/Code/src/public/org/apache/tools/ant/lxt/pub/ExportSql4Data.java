@@ -27,7 +27,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.stringtemplate.v4.ST;
 
-public class ExportSqlData extends Task {
+public class ExportSql4Data extends Task {
 	private String driver;
 	private String url;
 	private String user;
@@ -185,15 +185,19 @@ public class ExportSqlData extends Task {
 		}
 		ArrayList<ArrayList<String>> dataGrid = getDataFromSql(conn, sqlText);
 		if (mode.equals(MODE_DELINSERT)) {
-			log("Generating Update statements for: " + sqlText);
+			log("Generating Del and Insert statements for: " + sqlText);
 			generateDelInsertStatements(conn, dataGrid, p, tableName);
-			log("Generating Insert statements cont: " + String.valueOf(dataGrid.size()-1));
+			log("Generating Del and Insert statements cont: " + String.valueOf(dataGrid.size()-1));
 		}
 		else if (mode.equals(MODE_UPDATE)) {
+			log("Generating Update statements for: " + sqlText);
 			generateUpdateStatements(conn, dataGrid, p, tableName);
+			log("Generating Update statements cont: " + String.valueOf(dataGrid.size()-1));
 		}
 		else {
+			log("Generating Insert statements for: " + sqlText);
 			generateInsertStatements(dataGrid, p, tableName);
+			log("Generating Insert statements cont: " + String.valueOf(dataGrid.size()-1));
 		}
 	}
 
@@ -267,63 +271,69 @@ public class ExportSqlData extends Task {
 
 	private ArrayList<ArrayList<String>> getDataFromSql(Connection conn, String sqlText) throws SQLException {
 		ArrayList<ArrayList<String>> dataGrid = new ArrayList<ArrayList<String>>();
-		
-		Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(sqlText); 
-        ResultSetMetaData rsmd = rs.getMetaData();
-        int numColumns = rsmd.getColumnCount();
-        int[] columnTypes = new int[numColumns];
-        ArrayList<String> cloumnNames = new ArrayList<String>();
-        for (int i = 0; i < numColumns; i++) {
-            columnTypes[i] = rsmd.getColumnType(i + 1);
-            cloumnNames.add(rsmd.getColumnName(i + 1));
-        }
-        dataGrid.add(cloumnNames);
-        java.util.Date d = null; 
-        while (rs.next()) {
-        	ArrayList<String> cloumnValues = new ArrayList<String>();
-            for (int i = 0; i < numColumns; i++) {
-                switch (columnTypes[i]) {
-                    case Types.BIGINT:
-                    case Types.BIT:
-                    case Types.BOOLEAN:
-                    case Types.DECIMAL:
-                    case Types.DOUBLE:
-                    case Types.FLOAT:
-                    case Types.INTEGER:
-                    case Types.SMALLINT:
-                    case Types.TINYINT:
-                        String v = rs.getString(i + 1);
-                        cloumnValues.add(v);
-                        break;
-
-                    case Types.DATE:
-                        d = rs.getDate(i + 1); 
-                    case Types.TIME:
-                        if (d == null) d = rs.getTime(i + 1);
-                    case Types.TIMESTAMP:
-                        if (d == null) d = rs.getTimestamp(i + 1);
-
-                        if (d == null) {
-                        	cloumnValues.add("null");
-                        }
-                        else {
-                        	cloumnValues.add("TO_DATE('" + dateFormat.format(d) + "', 'YYYY/MM/DD HH24:MI:SS')");
-                        }
-                        break;
-
-                    default:
-                        v = rs.getString(i + 1);
-                        if (v != null) {
-                        	cloumnValues.add("'" + v.replaceAll("'", "''") + "'");
-                        }
-                        else {
-                        	cloumnValues.add("null");
-                        }
-                        break;
-                }
-            }
-            dataGrid.add(cloumnValues);
+		Statement stmt = null;
+        ResultSet rs = null; 
+        try {
+			stmt = conn.createStatement();
+	        rs = stmt.executeQuery(sqlText); 
+	        ResultSetMetaData rsmd = rs.getMetaData();
+	        int numColumns = rsmd.getColumnCount();
+	        int[] columnTypes = new int[numColumns];
+	        ArrayList<String> cloumnNames = new ArrayList<String>();
+	        for (int i = 0; i < numColumns; i++) {
+	            columnTypes[i] = rsmd.getColumnType(i + 1);
+	            cloumnNames.add(rsmd.getColumnName(i + 1));
+	        }
+	        dataGrid.add(cloumnNames);
+	        java.util.Date d = null; 
+	        while (rs.next()) {
+	        	ArrayList<String> cloumnValues = new ArrayList<String>();
+	            for (int i = 0; i < numColumns; i++) {
+	                switch (columnTypes[i]) {
+	                    case Types.BIGINT:
+	                    case Types.BIT:
+	                    case Types.BOOLEAN:
+	                    case Types.DECIMAL:
+	                    case Types.DOUBLE:
+	                    case Types.FLOAT:
+	                    case Types.INTEGER:
+	                    case Types.SMALLINT:
+	                    case Types.TINYINT:
+	                        String v = rs.getString(i + 1);
+	                        cloumnValues.add(v);
+	                        break;
+	
+	                    case Types.DATE:
+	                        d = rs.getDate(i + 1); 
+	                    case Types.TIME:
+	                        if (d == null) d = rs.getTime(i + 1);
+	                    case Types.TIMESTAMP:
+	                        if (d == null) d = rs.getTimestamp(i + 1);
+	
+	                        if (d == null) {
+	                        	cloumnValues.add("null");
+	                        }
+	                        else {
+	                        	cloumnValues.add("TO_DATE('" + dateFormat.format(d) + "', 'YYYY/MM/DD HH24:MI:SS')");
+	                        }
+	                        break;
+	
+	                    default:
+	                        v = rs.getString(i + 1);
+	                        if (v != null) {
+	                        	cloumnValues.add("'" + v.replaceAll("'", "''") + "'");
+	                        }
+	                        else {
+	                        	cloumnValues.add("null");
+	                        }
+	                        break;
+	                }
+	            }
+	            dataGrid.add(cloumnValues);
+	        }
+        }finally {
+        	if (rs != null) rs.close();
+        	if (stmt != null) stmt.close();
         }
 		return dataGrid;
 	}
