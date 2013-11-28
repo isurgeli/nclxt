@@ -78,7 +78,7 @@ public class SQLDefine implements ISQLDefine {
 	@Override
 	public SQLWhereClause[] getFixWheres() {
 		return new SQLWhereClause[] {
-			new SQLWhereClause(OPERATOR.AND, BRACKET.NONE, "paystatus", OPERATOR.EQ, "2"),
+			new SQLWhereClause(OPERATOR.AND, BRACKET.NONE, "1", OPERATOR.EQ, "1"),
 			new SQLWhereClause(OPERATOR.AND, BRACKET.NONE, "pk_fatherorg", OPERATOR.EQ, "pk_org"),
 			new SQLWhereClause(OPERATOR.AND, BRACKET.NONE, "def20", OPERATOR.NEQ, "'Y'")
 		};

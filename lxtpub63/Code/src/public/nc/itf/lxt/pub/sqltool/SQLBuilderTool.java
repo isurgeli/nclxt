@@ -37,12 +37,10 @@ public class SQLBuilderTool {
 			sqlTables.put(sqlTable.getKey(), sqlTable);	
 		
 		for(SQLWhereClause sqlWhere : sqlDef.getFixWheres()) {
-			sqlWhere.setSqlFields(sqlFields);
 			fixWheres.add(sqlWhere);
 		}
 		
 		for(SQLOrderbyClause sqlOrder : sqlDef.getOrderbys()) {
-			sqlOrder.setSqlFields(sqlFields);
 			sqlOrders.add(sqlOrder);
 		}
 		
@@ -95,29 +93,34 @@ public class SQLBuilderTool {
 		}
 		
 		for (SQLWhereClause where : fixWheres) {
+			where.setSqlFields(sqlFields);
 			wheres.add(where);
-			if (!joinTables.containsKey(where.getLeftTable()))
-				joinTables.put(where.getLeftTable(), where.getLeftTable());
-			if (where.getRightTable() != null && !joinTables.containsKey(where.getRightTable()))
-				joinTables.put(where.getRightTable(), where.getRightTable());
+			if (where.isLeftSqlField() && where.getLeftField().getTable() != null 
+					&& !joinTables.containsKey(where.getLeftField().getTable()))
+				joinTables.put(where.getLeftField().getTable(), where.getLeftField().getTable());
+			if (where.isRightSqlField() && where.getRightField().getTable() != null 
+					&& !joinTables.containsKey(where.getRightField().getTable()))
+				joinTables.put(where.getRightField().getTable(), where.getRightField().getTable());
 		}
 		
 		if (flexWheres != null) {
 			for (SQLWhereClause where : flexWheres) {
 				where.setSqlFields(sqlFields);
 				wheres.add(where);
-				if (!joinTables.containsKey(where.getLeftTable()))
-					joinTables.put(where.getLeftTable(), where.getLeftTable());
-				if (where.getRightTable() != null && !joinTables.containsKey(where.getRightTable()))
-					joinTables.put(where.getRightTable(), where.getRightTable());
+				if (where.isLeftSqlField() && where.getLeftField().getTable() != null 
+						&& !joinTables.containsKey(where.getLeftField().getTable()))
+					joinTables.put(where.getLeftField().getTable(), where.getLeftField().getTable());
+				if (where.isRightSqlField() && where.getRightField().getTable() != null 
+						&& !joinTables.containsKey(where.getRightField().getTable()))
+					joinTables.put(where.getRightField().getTable(), where.getRightField().getTable());
 			}
 		}
 		
 		for (SQLOrderbyClause order : sqlOrders) {
+			order.setSqlFields(sqlFields);
 			orders.add(order);
-			
-			if (!joinTables.containsKey(order.getTable()))
-				joinTables.put(order.getTable(), order.getTable());
+			if (!joinTables.containsKey(order.getSqlField().getTable()))
+				joinTables.put(order.getSqlField().getTable(), order.getSqlField().getTable());
 		}
 		
 		addSortAllNeedTables(tables, joins, joinTables);

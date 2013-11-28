@@ -26,41 +26,45 @@ public class SQLWhereClause {
 	}
 
 	public boolean isLeftBracket() {
-		return bracket.getValue().equals("(");
+		return bracket.equals(BRACKET.LEFT);
 	}
 
-	public String getLeftTable() throws BusinessException {
-		if (sqlFields.get(leftKey) == null)
-			throw new BusinessException("["+leftKey+"]没有定义。");
-		return sqlFields.get(leftKey).getTable();
+	public SQLField getLeftField() throws BusinessException {
+		if (!sqlFields.containsKey(leftKey))
+			throw new BusinessException("["+leftKey+"]定义不存在。");
+		
+		return sqlFields.get(leftKey);
 	}
 	
-	public String getLeftField() throws BusinessException {
-		if (sqlFields.get(leftKey) == null)
-			throw new BusinessException("["+leftKey+"]没有定义。");
-		return sqlFields.get(leftKey).getField();
+	public String getLeftKey() throws BusinessException {
+		return leftKey;
 	}
-
+	
+	public boolean isLeftSqlField() throws BusinessException {
+		return sqlFields.containsKey(leftKey);
+	}
+	
 	public String getCompareOP() {
 		return compareOP.getValue();
 	}
-
-	public String getRightTable() {
-		if (sqlFields.containsKey(rightKey))
-			return sqlFields.get(rightKey).getTable();
-		else
-			return null;
+	
+	public SQLField getRightField() throws BusinessException {
+		if (!sqlFields.containsKey(rightKey))
+			throw new BusinessException("["+rightKey+"]定义不存在。");
+		
+		return sqlFields.get(rightKey);
 	}
 	
-	public String getRightField() {
-		if (sqlFields.containsKey(rightKey))
-			return sqlFields.get(rightKey).getField();
-		else
-			return rightKey;
+	public String getRightKey() throws BusinessException {
+		return rightKey;
+	}
+	
+	public boolean isRightSqlField() throws BusinessException {
+		return sqlFields.containsKey(rightKey);
 	}
 
 	public boolean isRigthBracket() {
-		return bracket.getValue().equals(")");
+		return bracket.equals(BRACKET.RIGHT);
 	}
 
 	public void setSqlFields(Hashtable<String, SQLField> sqlFields) {

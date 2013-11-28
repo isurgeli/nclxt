@@ -2,6 +2,8 @@ package nc.itf.lxt.pub.sqltool;
 
 import java.util.Hashtable;
 
+import nc.vo.pub.BusinessException;
+
 public class SQLOrderbyClause {
 	private ORDER order;
 	private String key;
@@ -16,12 +18,11 @@ public class SQLOrderbyClause {
 		return order.getValue();
 	}
 
-	public String getTable() {
-		return sqlFields.get(key).getTable();
-	}
-	
-	public String getField() {
-		return sqlFields.get(key).getField();
+	public SQLField getSqlField() throws BusinessException {
+		if (!sqlFields.containsKey(key))
+			throw new BusinessException("["+key+"]定义不存在。");
+		
+		return sqlFields.get(key);
 	}
 	
 	public void setSqlFields(Hashtable<String, SQLField> sqlFields) {
