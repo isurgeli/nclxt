@@ -8,7 +8,7 @@ import nc.vo.pub.BusinessException;
 import nc.vo.pub.formulaset.FormulaParseFather;
 import nc.vo.pubapp.query2.sql.process.QueryCondition;
 
-public class LxtUITool {
+public class NCUITool {
 	static public String[] getQueryCondition(HashMap<String, QueryCondition> conditions, String id, String[] initdata) throws BusinessException {
 		if (initdata.length != 2)
 			throw new BusinessException("必需是两个值。");
