@@ -55,7 +55,7 @@ public class SQLBuilderTool {
 		
 		prepareTemplatePara(keys, flexWheres, fields, tables, joins, orders, wheres);
 		
-		STGroup group = new STGroupFile(SQLBuilderTool.class.getResource("basesql.stg").getPath());
+		STGroup group = new STGroupFile(SQLBuilderTool.class.getResource("basesql.stg"), "utf-8", '<', '>');
 		ST baseSt = group.getInstanceOf("sql");
 		baseSt.add("fields", fields);
 		baseSt.add("tables", tables);

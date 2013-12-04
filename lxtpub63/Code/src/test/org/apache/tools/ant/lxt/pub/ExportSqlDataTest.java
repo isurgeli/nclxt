@@ -28,6 +28,10 @@ public class ExportSqlDataTest extends BuildFileTest {
         executeTarget("table");
     }
     
+    public void testBlob() {
+        executeTarget("initdata");
+    }
+    
 //    public void testRegx() {
 //    	Pattern pa = Pattern.compile("select\\s+(\\w+).[\\w\\*]+");
 //    	String sql = "select a.bb from ";

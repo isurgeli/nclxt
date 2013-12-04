@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -171,13 +173,13 @@ public class ExportSql4Data extends Task {
         }
 	}
 
-	private void executeSql(Connection conn, PrintWriter p) throws SQLException {
+	private void executeSql(Connection conn, PrintWriter p) throws SQLException, IOException {
 		for (SQL sql : sqls) {
 			generateSQLStatements(conn, sql.sqlText, p);
         }
 	}
 	
-	void generateSQLStatements(Connection conn, String sqlText, PrintWriter p) throws SQLException {
+	void generateSQLStatements(Connection conn, String sqlText, PrintWriter p) throws SQLException, IOException {
 		String tableName = getTableName(sqlText);
 		if (tableName == null) {
 			log("Can not get the table name for: " + sqlText);
@@ -269,7 +271,7 @@ public class ExportSql4Data extends Task {
 		}
 	}
 
-	private ArrayList<ArrayList<String>> getDataFromSql(Connection conn, String sqlText) throws SQLException {
+	private ArrayList<ArrayList<String>> getDataFromSql(Connection conn, String sqlText) throws SQLException, IOException {
 		ArrayList<ArrayList<String>> dataGrid = new ArrayList<ArrayList<String>>();
 		Statement stmt = null;
         ResultSet rs = null; 
@@ -285,7 +287,8 @@ public class ExportSql4Data extends Task {
 	            cloumnNames.add(rsmd.getColumnName(i + 1));
 	        }
 	        dataGrid.add(cloumnNames);
-	        java.util.Date d = null; 
+	        java.util.Date d = null;
+	        Blob b = null;
 	        while (rs.next()) {
 	        	ArrayList<String> cloumnValues = new ArrayList<String>();
 	            for (int i = 0; i < numColumns; i++) {
@@ -317,7 +320,20 @@ public class ExportSql4Data extends Task {
 	                        	cloumnValues.add("TO_DATE('" + dateFormat.format(d) + "', 'YYYY/MM/DD HH24:MI:SS')");
 	                        }
 	                        break;
-	
+	                    case Types.BLOB:
+	                    	b = rs.getBlob(i + 1);
+	                    	if (b != null) {
+	                    		StringBuffer str = new StringBuffer();
+	                    		InputStream in = b.getBinaryStream();
+	                    		byte[] data = new byte[4096];
+	                    		for (int n; (n = in.read(data)) != -1;) {
+	                    			str.append(new String(data, 0, n));
+	                    		}
+	                    		cloumnValues.add("utl_raw.cast_to_raw('" + str.toString() + "')");
+	                    	}else{
+	                    		cloumnValues.add("EMPTY_BLOB()");
+	                    	}
+	                        break;
 	                    default:
 	                        v = rs.getString(i + 1);
 	                        if (v != null) {
