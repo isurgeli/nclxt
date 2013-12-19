@@ -5,6 +5,7 @@ import nc.ui.pubapp.uif2app.event.IAppEventHandler;
 import nc.ui.pubapp.uif2app.model.AppModelExDelegate;
 import nc.ui.pubapp.uif2app.model.IAppModelEx;
 import nc.ui.uif2.AppEvent;
+import nc.ui.uif2.AppEventListener;
 
 public class BillManageModel extends nc.ui.uif2.model.BillManageModel implements IAppModelEx{
 	private AppModelExDelegate appModelExDelegate = new AppModelExDelegate(this);
@@ -29,6 +30,14 @@ public class BillManageModel extends nc.ui.uif2.model.BillManageModel implements
 	@Override
 	public void setAppUiState(AppUiState appUiState) {
 		this.appModelExDelegate.setAppUiState(appUiState);
+	}
+	
+	public void addAppEventListener(AppEventListener l) {
+		this.appModelExDelegate.addAppEventListener(l);
+	}
+	
+	public void removeAppEventListener(AppEventListener l) {
+		this.appModelExDelegate.removeAppEventListener(l);
 	}
 
 	@Override
