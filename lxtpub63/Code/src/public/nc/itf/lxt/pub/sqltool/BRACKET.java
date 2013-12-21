@@ -3,7 +3,9 @@ package nc.itf.lxt.pub.sqltool;
 public enum BRACKET {
 	NONE(""),
 	LEFT("("),
-	RIGHT(")");
+	LEFT2("(("),
+	RIGHT(")"),
+	RIGHT2("))");
 	
 	private String value;
 	

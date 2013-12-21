@@ -5,7 +5,7 @@ select <fields:{f | <sfield(f)>}; separator=", ">
  <if(joins)>and (<endif>
  <joins:{j | <j.joinTable>.<j.joinField> = <j.mainTable>.<j.mainField>}; separator=" and ">
  <if(joins)>)<endif>
- <wheres:{w | <w.logicOP> <if(w.leftBracket)>(<endif> <wlfield(w)> <w.compareOP> <wrfield(w)> <if(w.rigthBracket)>)<endif>}>
+ <wheres:{w | <w.logicOP> <w.leftBracket> <wlfield(w)> <w.compareOP> <wrfield(w)> <w.rigthBracket> }>
  <if(orderbys)> order by <endif>
  <orderbys:{o | <ofield(o.sqlField)>}; separator=", ">
  <if(groups)> group by <endif>
