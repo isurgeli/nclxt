@@ -1,8 +1,9 @@
-package nc.ui.lxt.pub.editor;
+package nc.ui.lxt.pub.view.helper;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import nc.ui.lxt.pub.view.helper.MouseClickShowPanelMediator;
 import nc.ui.uif2.ShowStatusBarMsgUtil;
 import nc.ui.uif2.components.IAutoShowUpComponent;
 import nc.ui.uif2.editor.BillListView;

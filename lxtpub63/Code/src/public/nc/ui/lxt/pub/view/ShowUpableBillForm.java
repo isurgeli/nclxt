@@ -1,4 +1,4 @@
-package nc.ui.lxt.pub.editor;
+package nc.ui.lxt.pub.view;
 
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModelCellEditableController;
@@ -46,7 +46,7 @@ public class ShowUpableBillForm extends nc.ui.uif2.editor.BillForm implements IA
 
 	    if (headCellEditableCtrl != null) {
 	    	for (BillItem item : getBillCardPanel().getHeadItems()) {
-	    		if (headCellEditableCtrl.isCellEditable(false, 0, item.getKey()))
+	    		if (headCellEditableCtrl.isCellEditable(true, 0, item.getKey()))
 	    			item.setEdit(true);
 	    		else
 	    			item.setEdit(false);

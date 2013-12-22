@@ -1,5 +1,6 @@
 package nc.ui.lxt.pub.model;
 
+import nc.ui.lxt.pub.event.ModelStatusChangeEvent;
 import nc.ui.pubapp.uif2app.AppUiState;
 import nc.ui.pubapp.uif2app.event.IAppEventHandler;
 import nc.ui.pubapp.uif2app.model.AppModelExDelegate;
@@ -9,6 +10,18 @@ import nc.ui.uif2.AppEventListener;
 
 public class BillManageModel extends nc.ui.uif2.model.BillManageModel implements IAppModelEx{
 	private AppModelExDelegate appModelExDelegate = new AppModelExDelegate(this);
+	private String status;
+	
+	public String getStatus() {
+		return status;
+	}
+
+	
+	public void setStatus(String status)
+	{
+		this.status = status;
+		fireEvent(new ModelStatusChangeEvent(this, this.status));
+	}
 	
 	@Override
 	public void addAppEventListener(Class<? extends AppEvent> eventType,

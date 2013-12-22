@@ -1,4 +1,4 @@
-package nc.ui.lxt.pub.editor;
+package nc.ui.lxt.pub.view;
 
 import nc.ui.pubapp.uif2app.event.list.ListEventTransformer;
 import nc.ui.pubapp.uif2app.model.IAppModelEx;

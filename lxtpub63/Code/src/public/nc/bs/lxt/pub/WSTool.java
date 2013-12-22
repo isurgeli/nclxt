@@ -1,4 +1,4 @@
-package nc.vo.lxt.pub;
+package nc.bs.lxt.pub;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

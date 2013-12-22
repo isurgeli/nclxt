@@ -1,9 +1,8 @@
-package nc.ui.lxt.pub.editor;
+package nc.ui.lxt.pub.view.helper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.pub.bill.BillModelCellEditableController;
 
 public class DefaultCellEditableController implements
@@ -22,7 +21,7 @@ public class DefaultCellEditableController implements
 	@Override
 	public boolean isCellEditable(boolean value, int row, String itemkey) {
 		if (editableKeys.contains(itemkey)) 
-			return true;
+			return value;
 		else
 			return false;
 	}

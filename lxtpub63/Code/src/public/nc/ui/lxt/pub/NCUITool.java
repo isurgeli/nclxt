@@ -1,4 +1,4 @@
-package nc.ui.lxt.pub.editor;
+package nc.ui.lxt.pub;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ public class NCUITool {
 			
 			if (cvals[0]!=null && cvals[0].length()>0)
 				result[0] = cvals[0];
-			if (cvals[1]!=null && cvals[1].length()>0)
+			if (cvals.length>1 && cvals[1]!=null && cvals[1].length()>0)
 				result[1] = cvals[1];
 		}
 		

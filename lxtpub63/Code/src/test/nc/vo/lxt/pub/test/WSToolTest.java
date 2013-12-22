@@ -1,7 +1,7 @@
 package nc.vo.lxt.pub.test;
 
 import junit.framework.TestCase;
-import nc.vo.lxt.pub.WSTool;
+import nc.bs.lxt.pub.WSTool;
 import nc.vo.pub.BusinessException;
 
 public class WSToolTest extends TestCase {

@@ -29,7 +29,7 @@ public class SetUtils {
 				ret.append(array[i]+deli);
 		}
 		
-		ret.delete(ret.length(), ret.length());
+		ret.delete(ret.length()-1, ret.length());
 		
 		return ret.toString();
 	}
