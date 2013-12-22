@@ -39,6 +39,7 @@ public class ExportSql4Data extends Task {
 	
 	static String MODE_INSERT = "insert";
 	static String MODE_DELINSERT = "del_insert";
+	static String MODE_DEL = "del";
 	static String MODE_UPDATE = "update";
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -145,6 +146,7 @@ public class ExportSql4Data extends Task {
     }
 
 	private void executeSQlFile(Connection conn, PrintWriter p) throws IOException, SQLException {
+		sqls.clear();
 		for(Iterator<FileSet> itFSets = sqlfiles.iterator(); itFSets.hasNext(); ) {      
             FileSet fs = itFSets.next();
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());         
@@ -159,8 +161,11 @@ public class ExportSql4Data extends Task {
                 	char data = (char)reader.read();
                 	while(data != (char)-1) {
                 	  if (data == ';') {
-                		  if (sql.indexOf("select") != -1)
-                			  generateSQLStatements(conn, sql.toString(), p);
+                		  if (sql.indexOf("select") != -1) {
+                			  SQL sqlObj = new SQL();
+                			  sqlObj.addText(sql.toString());
+                			  sqls.add(sqlObj);//generateSQLStatements(conn, sql.toString(), p);
+                		  }
                 		  sql.delete(0, sql.length());
                 	  }else {
                 		  sql.append(data);
@@ -171,25 +176,41 @@ public class ExportSql4Data extends Task {
                 }
             }
         }
+		executeSql(conn, p);
 	}
 
 	private void executeSql(Connection conn, PrintWriter p) throws SQLException, IOException {
-		for (SQL sql : sqls) {
-			generateSQLStatements(conn, sql.sqlText, p);
-        }
+		if (mode.equals(MODE_DELINSERT)) {
+			for (int i=sqls.size()-1;i>=0;i--) {
+				generateSQLStatements(MODE_DEL, conn, sqls.get(i).sqlText, p);
+			}
+			for (SQL sql : sqls) {
+				generateSQLStatements(MODE_INSERT, conn, sql.sqlText, p);
+	        }
+		}
+		else if (mode.equals(MODE_UPDATE)) {
+			for (SQL sql : sqls) {
+				generateSQLStatements(mode, conn, sql.sqlText, p);
+	        }
+		}
+		else if (mode.equals(MODE_INSERT)) {
+			for (SQL sql : sqls) {
+				generateSQLStatements(mode, conn, sql.sqlText, p);
+	        }
+		}
 	}
 	
-	void generateSQLStatements(Connection conn, String sqlText, PrintWriter p) throws SQLException, IOException {
+	void generateSQLStatements(String curmode, Connection conn, String sqlText, PrintWriter p) throws SQLException, IOException {
 		String tableName = getTableName(sqlText);
 		if (tableName == null) {
 			log("Can not get the table name for: " + sqlText);
 			throw new BuildException("Can not get the table name for: " + sqlText);
 		}
 		ArrayList<ArrayList<String>> dataGrid = getDataFromSql(conn, sqlText);
-		if (mode.equals(MODE_DELINSERT)) {
-			log("Generating Del and Insert statements for: " + sqlText);
-			generateDelInsertStatements(conn, dataGrid, p, tableName);
-			log("Generating Del and Insert statements cont: " + String.valueOf(dataGrid.size()-1));
+		if (curmode.equals(MODE_DEL)) {
+			log("Generating Del statements for: " + sqlText);
+			generateDelStatements(conn, dataGrid, p, tableName);
+			log("Generating Del statements cont: " + String.valueOf(dataGrid.size()-1));
 		}
 		else if (mode.equals(MODE_UPDATE)) {
 			log("Generating Update statements for: " + sqlText);
@@ -226,7 +247,7 @@ public class ExportSql4Data extends Task {
 		}
 	}
 
-	private void generateDelInsertStatements(Connection conn, ArrayList<ArrayList<String>> dataGrid, PrintWriter p, String tableName) throws SQLException {
+	private void generateDelStatements(Connection conn, ArrayList<ArrayList<String>> dataGrid, PrintWriter p, String tableName) throws SQLException {
 		String keyName = getPrimarykeyForTable(conn, tableName);
 		ArrayList<String> columnNames = dataGrid.get(0);
 		int keyIdx = columnNames.indexOf(keyName);
@@ -239,7 +260,7 @@ public class ExportSql4Data extends Task {
 		st.add("keyname", keyName);
 		String delsql = st.render();
 		p.print(delsql);
-		generateInsertStatements(dataGrid, p, tableName);
+		//generateInsertStatements(dataGrid, p, tableName);
 	}
 
 	private String getPrimarykeyForTable(Connection conn, String tableName) throws SQLException {
