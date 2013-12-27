@@ -11,7 +11,11 @@ public enum OPERATOR {
 	LIKE("like"),
 	
 	AND("and"),
-	OR("or");
+	OR("or"),
+	
+	INNER("inner"),
+	LEFT("left"),
+	RIGHT("right");
 	
 	private String value;
 	
