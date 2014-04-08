@@ -7,14 +7,14 @@
 	<classpathentry kind="lib" path="E:/NCWorkspace/GitBase/nclxt/lxtpub63/exjar/ST-4.0.7.jar"/>
 	<classpathentry kind="src" output="out/resources" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="nc.uap.mde.library.container/Ant_Library"/>
-	<classpathentry kind="con" path="nc.uap.mde.library.container/Product_Common_Library"/>
-	<classpathentry kind="con" path="nc.uap.mde.library.container/Middleware_Library"/>
-	<classpathentry kind="con" path="nc.uap.mde.library.container/Framework_Library"/>
-	<classpathentry kind="con" path="nc.uap.mde.library.container/Module_Public_Library"/>
-	<classpathentry kind="con" path="nc.uap.mde.library.container/Module_Client_Library"/>
-	<classpathentry kind="con" path="nc.uap.mde.library.container/Module_Private_Library"/>
-	<classpathentry kind="con" path="nc.uap.mde.library.container/Module_Lang_Library"/>
-	<classpathentry kind="con" path="nc.uap.mde.library.container/Generated_EJB"/>
+	<classpathentry kind="con" path="com.yonyou.studio.ria.core.library.container/Ant_Library"/>
+	<classpathentry kind="con" path="com.yonyou.studio.ria.core.library.container/Product_Common_Library"/>
+	<classpathentry kind="con" path="com.yonyou.studio.ria.core.library.container/Middleware_Library"/>
+	<classpathentry kind="con" path="com.yonyou.studio.ria.core.library.container/Framework_Library"/>
+	<classpathentry kind="con" path="com.yonyou.studio.ria.core.library.container/Module_Public_Library"/>
+	<classpathentry kind="con" path="com.yonyou.studio.ria.core.library.container/Module_Client_Library"/>
+	<classpathentry kind="con" path="com.yonyou.studio.ria.core.library.container/Module_Private_Library"/>
+	<classpathentry kind="con" path="com.yonyou.studio.ria.core.library.container/Module_Lang_Library"/>
+	<classpathentry kind="con" path="com.yonyou.studio.ria.core.library.container/Generated_EJB"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
