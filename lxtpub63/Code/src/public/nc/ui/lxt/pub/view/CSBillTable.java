@@ -1,6 +1,6 @@
 package nc.ui.lxt.pub.view;
 
-import nc.ui.lxt.pub.editor.BillColumnHelper;
+import nc.ui.lxt.pub.view.helper.BillColumnHelper;
 import nc.ui.uif2.editor.BillTable;
 import nc.ui.uif2.editor.value.BillCardPanelBodyVOValueAdapter;
 import nc.ui.uif2.editor.value.BillCardPanelMetaDataValueAdapter;

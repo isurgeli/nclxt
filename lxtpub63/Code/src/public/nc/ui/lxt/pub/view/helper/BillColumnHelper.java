@@ -7,7 +7,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Date;
 
-import nc.ui.lxt.pub.editor.CheckBoxRenderer;
 import nc.ui.pub.bill.BillCardPanel;
 import nc.ui.pub.bill.BillModelCellEditableController;
 
