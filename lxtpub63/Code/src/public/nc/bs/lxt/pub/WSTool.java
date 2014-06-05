@@ -20,13 +20,13 @@ import org.apache.commons.httpclient.methods.RequestEntity;
 
 
 public class WSTool {
-	public static String callByHttp(String url, String soapMsg) throws BusinessException {
+	public static String callByHttp(String url, String soapMsg, String cType) throws BusinessException {
 		try {
 			PostMethod postMethod = new PostMethod(url);
 			// 然后把Soap请求数据添加到PostMethod中
 			byte[] b = soapMsg.getBytes("utf-8");
 			InputStream is = new ByteArrayInputStream(b, 0, b.length);
-			RequestEntity re = new InputStreamRequestEntity(is, b.length, "text/xml;charset=utf-8");
+			RequestEntity re = new InputStreamRequestEntity(is, b.length, cType);
 			postMethod.setRequestEntity(re);
 	
 			// 最后生成一个HttpClient对象，并发出postMethod请求

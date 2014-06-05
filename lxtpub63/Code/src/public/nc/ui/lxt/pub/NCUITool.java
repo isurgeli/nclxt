@@ -1,7 +1,10 @@
 package nc.ui.lxt.pub;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import antlr.collections.List;
 
 import nc.ui.pub.formulaparse.FormulaParseRunInServer;
 import nc.vo.pub.BusinessException;
@@ -10,19 +13,20 @@ import nc.vo.pubapp.query2.sql.process.QueryCondition;
 
 public class NCUITool {
 	static public String[] getQueryCondition(HashMap<String, QueryCondition> conditions, String id, String[] initdata) throws BusinessException {
-		if (initdata.length != 2)
-			throw new BusinessException("必需是两个值。");
-		String[] result = Arrays.copyOf(initdata, 2);
+		ArrayList<String> result = new ArrayList<String>();
+		result.addAll(Arrays.asList(initdata));
 		if (conditions.get(id) != null) {
 			String[] cvals = conditions.get(id).getValues();
 			
-			if (cvals[0]!=null && cvals[0].length()>0)
-				result[0] = cvals[0];
-			if (cvals.length>1 && cvals[1]!=null && cvals[1].length()>0)
-				result[1] = cvals[1];
+			for (int i=0;i<cvals.length;i++) {
+				if (cvals[i]!=null && cvals[i].length()>0 && i<initdata.length)
+					result.set(i, cvals[i]);
+				else if (cvals[i]!=null && cvals[i].length()>0) 
+					result.add(cvals[i]);
+			}
 		}
 		
-		return result;
+		return result.toArray(new String[]{});
 	}
 	
 	static public Object[][] getValueByFormula(String[] formula, HashMap<String, Object> vars) {

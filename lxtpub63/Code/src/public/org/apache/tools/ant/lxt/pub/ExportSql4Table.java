@@ -190,7 +190,7 @@ public class ExportSql4Table extends Task {
         ResultSet rs = null; 
         try {
 			stmt = conn.createStatement();
-	        rs = stmt.executeQuery("select OBJECT_NAME, OBJECT_TYPE from USER_OBJECTS where object_type in ('TABLE', 'VIEW')");  
+	        rs = stmt.executeQuery("select OBJECT_NAME, OBJECT_TYPE from USER_OBJECTS where object_type in ('TABLE', 'VIEW') order by OBJECT_TYPE, OBJECT_NAME");  
 	        while (rs.next()) {
 	        	ArrayList<String> tablename = new ArrayList<String>();
 	        	tablename.add(rs.getString(1));

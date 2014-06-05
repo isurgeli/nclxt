@@ -38,11 +38,11 @@ public class SetUtils {
 		StringBuffer ret = new StringBuffer();
 		
 		for (int i=0; i<strs.size(); i++) 
-			ret.append(strs.get(0)+deli);
+			ret.append(strs.get(i)+deli);
 		
 		for (List<String> array : rest) {
 			for (int i=0; i<array.size(); i++) 
-				ret.append(array.get(0)+deli);
+				ret.append(array.get(i)+deli);
 		}
 		
 		ret.delete(ret.length()-1, ret.length());
